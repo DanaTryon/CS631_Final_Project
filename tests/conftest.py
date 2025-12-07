@@ -22,3 +22,8 @@ def db_session():
         yield session
     finally:
         session.close()
+
+# Alias so tests can request `test_db`
+@pytest.fixture()
+def test_db(db_session):
+    return db_session
