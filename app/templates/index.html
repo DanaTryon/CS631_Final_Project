@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CS631 Personnel Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>CS631 Personnel Portal</h1>
+    <p>Welcome to the Human Resources & Project Management System</p>
+  </header>
+
+  <main>
+    <div class="card-container">
+      <div class="card">
+        <h2>Human Resources</h2>
+        <p>Manage employee records, payroll, and tax history for salaried and hourly staff.</p>
+        <a href="{{ url_for('read_hr') }}">Enter HR Module</a>
+      </div>
+      <div class="card">
+        <h2>Project Management</h2>
+        <p>Create projects, assign teams, track milestones, and view project statistics.</p>
+        <a href="{{ url_for('read_projects') }}">Enter Project Module</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 CS631 Personnel Database | Developed for NJIT Term Project
+  </footer>
+</body>
+</html>

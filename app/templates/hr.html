@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Human Resources Management</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Human Resources Management</h1>
+    <p>Manage employee records, payroll, and tax history</p>
+  </header>
+
+  <main>
+    <h2>Features</h2>
+    <ul>
+      <li>View and update employee profiles</li>
+      <li>Track salary and tax history</li>
+      <li>Calculate monthly payroll with automatic tax deductions</li>
+      <li>Manage hourly and salaried employees</li>
+    </ul>
+
+    <div class="card">
+      <h2>Payroll</h2>
+      <p>View calculated net pay for employees.</p>
+      <a href="{{ url_for('payroll_page') }}">Run Payroll</a>
+    </div>
+
+    <a href="{{ url_for('read_index') }}">← Back to Home</a>
+  </main>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Payroll Report</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Payroll Report</h1>
+    <p>Net pay for all employees</p>
+  </header>
+
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>Employee ID</th>
+          <th>Name</th>
+          <th>Net Pay</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in report %}
+        <tr>
+          <td>{{ row.emp_id }}</td>
+          <td>{{ row.name }}</td>
+          <td>${{ "%.2f"|format(row.net_pay) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+
+  <footer>
+    <a href="{{ url_for('read_index') }}">Back to Home</a>
+  </footer>
+</body>
+</html>

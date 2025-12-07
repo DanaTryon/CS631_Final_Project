@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Project Management</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Project Management</h1>
+    <p>Create and manage projects, teams, and milestones</p>
+  </header>
+
+  <main>
+    <h2>Features</h2>
+    <ul>
+      <li>Create new projects and assign managers</li>
+      <li>Build and manage project teams</li>
+      <li>Track milestones and deliverables</li>
+      <li>View project statistics and person-hours</li>
+    </ul>
+
+    <a href="{{ url_for('read_index') }}">← Back to Home</a>
+  </main>
+</body>
+</html>

@@ -1,0 +1,23 @@
+CS631-Personnel-Database/
+│
+├── app/
+│   ├── main.py              # FastAPI entry point
+│   ├── models/              # SQLAlchemy ORM models
+│   ├── schemas/             # Pydantic models
+│   ├── routes/              # API routers
+│   ├── services/            # Business logic
+│   ├── database.py
+│   ├── templates/           # Jinja2 templates (HTML)
+│   │   ├── base.html
+│   │   ├── payroll.html
+│   │   ├── project.html
+│   │   └── employee.html
+│   └── static/              # CSS, JS, images
+│       ├── style.css
+│       └── script.js
+│
+├── docs/                    # Requirements/design docs
+├── sample_data/             # CSV seed data
+├── tests/                   # Pytest tests
+├── requirements.txt
+└── README.md
