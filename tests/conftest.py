@@ -1,14 +1,24 @@
+# tests/conftest.py
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.database import Base
+from app.database import Base, engine, SessionLocal
 
-@pytest.fixture(scope="function")
-def test_db():
-    # Create a new in-memory SQLite DB for each test
-    engine = create_engine("sqlite:///:memory:", echo=False)
-    TestingSessionLocal = sessionmaker(bind=engine)
+@pytest.fixture(scope="session", autouse=True)
+def setup_database():
+    """
+    Create all tables at the start of the test session,
+    and drop them at the end.
+    """
     Base.metadata.create_all(bind=engine)
-    db = TestingSessionLocal()
-    yield db
-    db.close()
+    yield
+    Base.metadata.drop_all(bind=engine)
+
+@pytest.fixture()
+def db_session():
+    """
+    Provide a fresh database session for each test.
+    """
+    session = SessionLocal()
+    try:
+        yield session
+    finally:
+        session.close()
