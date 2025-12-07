@@ -7,8 +7,11 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.services.payroll import run_payroll
+from app.routes import employees
+
 
 app = FastAPI()
+app.include_router(employees.router)
 
 # Serve static files
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

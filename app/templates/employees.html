@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employees</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        h1 { color: #333; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+        th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+        th { background-color: #f4f4f4; }
+        form { margin-top: 2rem; }
+        label { display: block; margin-top: 0.5rem; }
+        input { padding: 0.4rem; width: 300px; }
+        button { margin-top: 1rem; padding: 0.5rem 1rem; }
+    </style>
+</head>
+<body>
+    <h1>Employee Directory</h1>
+
+    <!-- Employee Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Title</th>
+                <th>Department</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in employees %}
+            <tr>
+                <td>{{ emp.emp_id }}</td>
+                <td>{{ emp.name }}</td>
+                <td>{{ emp.title }}</td>
+                <td>{{ emp.department or "" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Add Employee Form -->
+    <h2>Add New Employee</h2>
+    <form method="post" action="/employees_page">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="department">Department:</label>
+        <input type="text" id="department" name="department">
+
+        <button type="submit">Add Employee</button>
+    </form>
+
+    <footer>
+        <a href="/hr">Back to HR Page</a>
+    </footer>
+
+</body>
+</html>

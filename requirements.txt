@@ -1,3 +1,4 @@
+alembic==1.13.1
 fastapi==0.115.0
 uvicorn[standard]==0.30.0
 sqlalchemy==2.0.25
@@ -8,6 +9,7 @@ pytest==8.3.2        # testing
 pymysql
 jinja2
 python-dotenv
+python-multipart
 playwright
 pytest-cov
 httpx

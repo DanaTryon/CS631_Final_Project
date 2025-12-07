@@ -9,6 +9,7 @@ class Employee(Base):
     emp_id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     title = Column(String(50), nullable=False)
+    department = Column(String(100), nullable=True)
 
     # Relationships
     job_history = relationship("JobHistory", back_populates="employee")

@@ -1,3 +1,4 @@
+# app/schemas/employee.py
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import date
@@ -23,7 +24,18 @@ class EmployeeBase(BaseModel):
     title: str
 
 class EmployeeCreate(EmployeeBase):
-    pass
+    name: str
+    title: str
+    department: str | None = None
+
+class EmployeeRead(BaseModel):
+    emp_id: int
+    name: str
+    title: str
+    department: str | None = None
+
+    class Config:
+        orm_mode = True
 
 class Employee(EmployeeBase):
     emp_id: int

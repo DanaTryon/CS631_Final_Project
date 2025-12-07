@@ -1,3 +1,4 @@
+# app/schemas/payroll.py
 from pydantic import BaseModel, ConfigDict
 
 class PayrollRecord(BaseModel):

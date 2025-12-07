@@ -20,11 +20,19 @@
       <li>Manage hourly and salaried employees</li>
     </ul>
 
+  <div class="cards-container">
+    <div class="card">
+      <h2>Employee Management</h2>
+      <p>Add new employees and view existing records.</p>
+      <a href="{{ url_for('employees_page') }}">Manage Employees</a>
+    </div>
+
     <div class="card">
       <h2>Payroll</h2>
       <p>View calculated net pay for employees.</p>
       <a href="{{ url_for('payroll_page') }}">Run Payroll</a>
     </div>
+  </div>
 
     <a href="{{ url_for('read_index') }}">← Back to Home</a>
   </main>
