@@ -1,3 +1,5 @@
+# app/main.py
+import os
 from fastapi import FastAPI, Depends, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -12,9 +14,9 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # Set up templates
-templates = Jinja2Templates(
-    directory="/home/danat/projects/CS631_final_project/app/templates"
-)
+#templates = Jinja2Templates(directory="/home/danat/projects/CS631_final_project/app/templates")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 # Landing page
 @app.get("/", response_class=HTMLResponse, tags=["web"])
