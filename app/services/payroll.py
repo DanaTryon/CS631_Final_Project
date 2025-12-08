@@ -1,11 +1,14 @@
+# app/services/payroll.py
 from sqlalchemy.orm import Session
+from decimal import Decimal
 from app.models.employee import Employee
 from app.models.job_history import JobHistory
 from app.schemas.payroll import PayrollRecord
 
-FEDERAL_TAX = 0.10
-STATE_TAX = 0.05
-OTHER_TAX = 0.03
+# Use Decimal for precise financial calculations
+FEDERAL_TAX = Decimal("0.10")
+STATE_TAX = Decimal("0.05")
+OTHER_TAX = Decimal("0.03")
 
 def run_payroll(db: Session):
     employees = db.query(Employee).all()
@@ -15,19 +18,22 @@ def run_payroll(db: Session):
         # Get latest job history for salary
         latest_job = (
             db.query(JobHistory)
-            .filter(JobHistory.emp_id == emp.emp_id)
-            .order_by(JobHistory.start_date.desc())
+            .filter(JobHistory.EmpID == emp.EmpID)
+            .order_by(JobHistory.StartDate.desc())
             .first()
         )
 
         if latest_job:
-            gross = latest_job.salary
-            deductions = gross * (FEDERAL_TAX + STATE_TAX + OTHER_TAX)
+            gross = latest_job.Salary  # already a Decimal from DB
+            total_tax_rate = FEDERAL_TAX + STATE_TAX + OTHER_TAX
+            deductions = gross * total_tax_rate
             net_pay = gross - deductions
 
             record = PayrollRecord(
-                emp_id=emp.emp_id,
-                name=emp.name,
+                emp_id=emp.EmpID,
+                name=emp.Name,
+                gross=gross,
+                deductions=deductions,
                 net_pay=net_pay
             )
             report.append(record)

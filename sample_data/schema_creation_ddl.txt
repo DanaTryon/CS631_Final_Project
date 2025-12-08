@@ -1,0 +1,100 @@
+-- Building must come first
+CREATE TABLE Building (
+    BuildingCode VARCHAR(10) PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    YearBuilt YEAR,
+    Cost DECIMAL(12,2)
+);
+
+-- Office
+CREATE TABLE Office (
+    OfficeID INT PRIMARY KEY AUTO_INCREMENT,
+    AreaSqFt INT NOT NULL
+);
+
+-- Employee (needs Office first, references Project later)
+CREATE TABLE Employee (
+    EmpID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(100) NOT NULL,
+    Title VARCHAR(100),
+    OfficeID INT,
+    DeptID INT NULL,
+    DivisionID INT NULL,
+    CurrentProjectID INT NULL,
+    FOREIGN KEY (OfficeID) REFERENCES Office(OfficeID)
+);
+
+-- Division (references Employee for DivHeadID)
+CREATE TABLE Division (
+    DivisionID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(100) NOT NULL,
+    DivHeadID INT,
+    FOREIGN KEY (DivHeadID) REFERENCES Employee(EmpID)
+);
+
+-- Department (references Division + Employee)
+CREATE TABLE Department (
+    DeptID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(100) UNIQUE NOT NULL,
+    Budget DECIMAL(12,2),
+    DivisionID INT,
+    DeptHeadID INT,
+    FOREIGN KEY (DivisionID) REFERENCES Division(DivisionID),
+    FOREIGN KEY (DeptHeadID) REFERENCES Employee(EmpID)
+);
+
+-- Project (references Employee for ManagerID)
+CREATE TABLE Project (
+    ProjectID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(150) NOT NULL,
+    Description TEXT,
+    Budget DECIMAL(12,2),
+    StartDate DATE,
+    EndDate DATE,
+    ManagerID INT,
+    FOREIGN KEY (ManagerID) REFERENCES Employee(EmpID)
+);
+
+-- Now add the FK from Employee to Project
+ALTER TABLE Employee
+    ADD CONSTRAINT fk_employee_project
+    FOREIGN KEY (CurrentProjectID) REFERENCES Project(ProjectID);
+
+-- Room (references Building)
+CREATE TABLE Room (
+    BuildingCode VARCHAR(10),
+    RoomNumber INT,
+    RoomType VARCHAR(50),
+    PRIMARY KEY (BuildingCode, RoomNumber),
+    FOREIGN KEY (BuildingCode) REFERENCES Building(BuildingCode)
+);
+
+-- Phone (references Office + Employee)
+CREATE TABLE Phone (
+    PhoneNumber VARCHAR(15) PRIMARY KEY,
+    OfficeID INT,
+    EmpID INT,
+    FOREIGN KEY (OfficeID) REFERENCES Office(OfficeID),
+    FOREIGN KEY (EmpID) REFERENCES Employee(EmpID)
+);
+
+-- JobHistory (references Employee)
+CREATE TABLE JobHistory (
+    EmpID INT,
+    Title VARCHAR(100),
+    StartDate DATE,
+    Salary DECIMAL(12,2),
+    PRIMARY KEY (EmpID, StartDate),
+    FOREIGN KEY (EmpID) REFERENCES Employee(EmpID)
+);
+
+-- ProjectHistory (references Employee + Project)
+CREATE TABLE ProjectHistory (
+    EmpID INT,
+    ProjectID INT,
+    Role VARCHAR(100),
+    TimeSpent INT,
+    PRIMARY KEY (EmpID, ProjectID),
+    FOREIGN KEY (EmpID) REFERENCES Employee(EmpID),
+    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
+);

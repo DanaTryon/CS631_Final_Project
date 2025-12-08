@@ -1,54 +1,38 @@
 # app/main.py
-import os
-from fastapi import FastAPI, Depends, Request
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app.services.payroll import run_payroll
-from app.routes import employees
 
+# Centralized imports
+from app.core.database import Base
+from app.core.templates import templates
+from app.routes import employees, payroll, tax
+import app.models  # Ensure models are registered
+
+# Print registered tables for verification
+print("Registered tables:", Base.metadata.tables.keys())
 
 app = FastAPI()
+
+# Include routers
 app.include_router(employees.router)
+app.include_router(payroll.router)
+app.include_router(tax.router)
 
 # Serve static files
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-# Set up templates
-#templates = Jinja2Templates(directory="/home/danat/projects/CS631_final_project/app/templates")
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
-
 # Landing page
 @app.get("/", response_class=HTMLResponse, tags=["web"])
 async def read_index(request: Request):
-    return templates.TemplateResponse(request, "index.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request})
 
 # HR page
-@app.get("/hr", response_class=HTMLResponse)
+@app.get("/hr", response_class=HTMLResponse, tags=["web"])
 async def read_hr(request: Request):
-    return templates.TemplateResponse(request, "hr.html", {"request": request})
+    return templates.TemplateResponse("hr.html", {"request": request})
 
 # Projects page
-@app.get("/projects", response_class=HTMLResponse)
+@app.get("/projects", response_class=HTMLResponse, tags=["web"])
 async def read_projects(request: Request):
-    return templates.TemplateResponse(request, "projects.html", {"request": request})
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-@app.post("/payroll/run")
-def payroll_run(db: Session = Depends(get_db)):
-    report = run_payroll(db)
-    return {"payroll_report": report}
-
-@app.get("/payroll", response_class=HTMLResponse)
-def payroll_page(request: Request, db: Session = Depends(get_db)):
-    report = run_payroll(db)
-    return templates.TemplateResponse(request, "payroll.html", {"request": request, "report": report})
+    return templates.TemplateResponse("projects.html", {"request": request})

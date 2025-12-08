@@ -4,11 +4,19 @@
   <meta charset="UTF-8" />
   <title>Payroll Report</title>
   <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    h1 { color: #333; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+    th { background-color: #f4f4f4; }
+    tfoot td { font-weight: bold; background-color: #eaeaea; }
+  </style>
 </head>
 <body>
   <header>
     <h1>Payroll Report</h1>
-    <p>Net pay for all employees</p>
+    <p>Gross, deductions, and net pay for all employees</p>
   </header>
 
   <main>
@@ -17,18 +25,36 @@
         <tr>
           <th>Employee ID</th>
           <th>Name</th>
+          <th>Gross Salary</th>
+          <th>Deductions</th>
           <th>Net Pay</th>
         </tr>
       </thead>
       <tbody>
-        {% for row in report %}
+        {% for row in payroll_records %}
         <tr>
           <td>{{ row.emp_id }}</td>
           <td>{{ row.name }}</td>
+          <td>${{ "%.2f"|format(row.gross) }}</td>
+          <td>${{ "%.2f"|format(row.deductions) }}</td>
           <td>${{ "%.2f"|format(row.net_pay) }}</td>
         </tr>
         {% endfor %}
       </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2">Totals</td>
+          <td>
+            ${{ "%.2f"|format(payroll_records | sum(attribute='gross')) }}
+          </td>
+          <td>
+            ${{ "%.2f"|format(payroll_records | sum(attribute='deductions')) }}
+          </td>
+          <td>
+            ${{ "%.2f"|format(payroll_records | sum(attribute='net_pay')) }}
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </main>
 

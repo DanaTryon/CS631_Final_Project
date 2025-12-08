@@ -1,15 +1,15 @@
-from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey
+# app/models/job_history.py
+from sqlalchemy import Column, Integer, String, Date, DECIMAL, ForeignKey
 from sqlalchemy.orm import relationship
-from app.database import Base
+from app.core.database import Base
 
 class JobHistory(Base):
-    __tablename__ = "job_history"
+    __tablename__ = "JobHistory"
 
-    id = Column(Integer, primary_key=True, index=True)
-    emp_id = Column(Integer, ForeignKey("employees.emp_id"))
-    title = Column(String(50), nullable=False)
-    start_date = Column(Date, nullable=False)
-    salary = Column(Float, nullable=False)
+    EmpID = Column(Integer, ForeignKey("Employee.EmpID"), primary_key=True)
+    StartDate = Column(Date, primary_key=True)
+    Title = Column(String(100), nullable=False)
+    Salary = Column(DECIMAL(12, 2), nullable=False)
 
-    # Relationships
+    # Relationship back to Employee
     employee = relationship("Employee", back_populates="job_history")

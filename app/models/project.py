@@ -1,19 +1,21 @@
 # app/models/project.py
-from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, DECIMAL, Date, ForeignKey
 from sqlalchemy.orm import relationship
-from app.database import Base
+from app.core.database import Base
 
 class Project(Base):
-    __tablename__ = "projects"
+    __tablename__ = "Project"
 
-    project_id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(100), nullable=False)
-    budget = Column(Float, nullable=False)
-    start_date = Column(Date, nullable=False)
-    end_date = Column(Date, nullable=True)
+    ProjectID = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    Name = Column(String(150), nullable=False)
+    Description = Column(Text, nullable=True)
+    Budget = Column(DECIMAL(12, 2), nullable=True)
+    StartDate = Column(Date, nullable=True)
+    EndDate = Column(Date, nullable=True)
+    ManagerID = Column(Integer, ForeignKey("Employee.EmpID"))
 
     # Relationships
-    manager_id = Column(Integer, ForeignKey("employees.emp_id"))
-    manager = relationship("Employee")
-    milestones = relationship("Milestone", back_populates="project")
-    team = relationship("ProjectHistory", back_populates="project")
+    manager = relationship("Employee", foreign_keys=[ManagerID])
+    project_history = relationship("ProjectHistory", back_populates="project")
+    employees = relationship("Employee", back_populates="current_project", foreign_keys="Employee.CurrentProjectID")
+    milestones = relationship("Milestone", back_populates="project", foreign_keys="Milestone.ProjectID")

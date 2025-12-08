@@ -6,6 +6,7 @@ pydantic==2.6.4
 mysqlclient==2.2.4   # or use async driver: aiomysql
 alembic==1.13.1      # for migrations
 pytest==8.3.2        # testing
+python-dotenv==1.0.1 
 pymysql
 jinja2
 python-dotenv
