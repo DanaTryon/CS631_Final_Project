@@ -1,48 +1,23 @@
 # app/routes/tax.py
-from fastapi import APIRouter, Request, Depends
-from fastapi.responses import StreamingResponse
+from fastapi import APIRouter, Depends, Request
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
-from io import StringIO
-import csv
-
 from app.core.database import get_db
 from app.core.templates import templates
-from app.models.tax_report import TaxReport
+from app.services.tax import run_tax_report
+from app.schemas.tax import TaxReport
 
 router = APIRouter()
 
-@router.get("/tax_reports_page")
-def tax_reports_page(request: Request, db: Session = Depends(get_db)):
-    reports = db.query(TaxReport).all()
+@router.post("/tax_report/run", response_model=TaxReport)
+def run_tax_endpoint(year: int, db: Session = Depends(get_db)):
+    report = run_tax_report(db, year)
+    return TaxReport(tax_report=report)
+
+@router.get("/tax_report", response_class=HTMLResponse)
+def tax_page(request: Request, db: Session = Depends(get_db)):
+    # Default to current year for demo
+    report = run_tax_report(db, year=2025)
     return templates.TemplateResponse(
-        "tax_reports.html", {"request": request, "reports": reports}
-    )
-
-@router.get("/tax_reports/export")
-def export_tax_reports(db: Session = Depends(get_db)):
-    reports = db.query(TaxReport).all()
-
-    output = StringIO()
-    writer = csv.writer(output)
-    writer.writerow([
-        "Employee ID", "Period", "Gross Pay",
-        "Federal Tax", "State Tax", "Other Tax", "Net Pay"
-    ])
-    for r in reports:
-        writer.writerow([
-            r.emp_id,
-            r.period,
-            f"{r.gross_pay:.2f}",
-            f"{r.federal_tax:.2f}",
-            f"{r.state_tax:.2f}",
-            f"{r.other_tax:.2f}",
-            f"{r.net_pay:.2f}",
-        ])
-
-    output.seek(0)
-
-    return StreamingResponse(
-        output,
-        media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=tax_reports.csv"}
+        "tax.html", {"request": request, "tax_records": report}
     )

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tax Report</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    h1 { color: #333; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+    th { background-color: #f4f4f4; }
+    tfoot td { font-weight: bold; background-color: #eaeaea; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tax Report</h1>
+    <p>Federal, state, and other taxes for all employees</p>
+  </header>
+
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>Employee ID</th>
+          <th>Name</th>
+          <th>Year</th>
+          <th>Federal Tax</th>
+          <th>State Tax</th>
+          <th>Other Tax</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in tax_records %}
+        <tr>
+          <td>{{ row.emp_id }}</td>
+          <td>{{ row.name }}</td>
+          <td>{{ row.year }}</td>
+          <td>${{ "%.2f"|format(row.federal) }}</td>
+          <td>${{ "%.2f"|format(row.state) }}</td>
+          <td>${{ "%.2f"|format(row.other) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">Totals</td>
+          <td>
+            ${{ "%.2f"|format(tax_records | sum(attribute='federal')) }}
+          </td>
+          <td>
+            ${{ "%.2f"|format(tax_records | sum(attribute='state')) }}
+          </td>
+          <td>
+            ${{ "%.2f"|format(tax_records | sum(attribute='other')) }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </main>
+
+  <footer>
+    <a href="/hr">Back to HR Page</a>
+  </footer>
+</body>
+</html>

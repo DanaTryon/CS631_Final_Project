@@ -23,3 +23,4 @@ class Employee(Base):
     milestones = relationship("Milestone", back_populates="responsible_emp", foreign_keys="Milestone.ResponsibleEmpID")
     current_project = relationship("Project", back_populates="employees", foreign_keys=[CurrentProjectID])
     phones = relationship("Phone", back_populates="employee", foreign_keys="Phone.EmpID")
+    tax_reports = relationship("TaxReport", back_populates="employee", foreign_keys="TaxReport.EmpID")

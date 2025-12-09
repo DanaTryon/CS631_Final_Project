@@ -11,3 +11,4 @@ from .building import Building
 from .room import Room
 from .phone import Phone
 from .office import Office
+from .tax_report import TaxReport

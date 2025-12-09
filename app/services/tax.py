@@ -1,31 +1,40 @@
 # app/services/tax.py
-from app.models.tax_report import TaxReport
-from app.database import SessionLocal
+from sqlalchemy.orm import Session
+from decimal import Decimal
+from app.models.employee import Employee
+from app.models.job_history import JobHistory
+from app.schemas.tax import TaxRecord
 
-FEDERAL_RATE = 0.10
-STATE_RATE = 0.05
-OTHER_RATE = 0.03
+FEDERAL_TAX = Decimal("0.10")
+STATE_TAX = Decimal("0.05")
+OTHER_TAX = Decimal("0.03")
 
-def generate_tax_report(payroll_records, period):
-    session = SessionLocal()
-    reports = []
-    for record in payroll_records:
-        gross = record.gross_pay
-        federal = gross * FEDERAL_RATE
-        state = gross * STATE_RATE
-        other = gross * OTHER_RATE
-        net = gross - (federal + state + other)
+def run_tax_report(db: Session, year: int):
+    employees = db.query(Employee).all()
+    report = []
 
-        report = TaxReport(
-            emp_id=record.emp_id,
-            period=period,
-            gross_pay=gross,
-            federal_tax=federal,
-            state_tax=state,
-            other_tax=other,
-            net_pay=net,
+    for emp in employees:
+        latest_job = (
+            db.query(JobHistory)
+            .filter(JobHistory.EmpID == emp.EmpID)
+            .order_by(JobHistory.StartDate.desc())
+            .first()
         )
-        session.add(report)
-        reports.append(report)
-    session.commit()
-    return reports
+
+        if latest_job:
+            gross = latest_job.Salary
+            federal = gross * FEDERAL_TAX
+            state = gross * STATE_TAX
+            other = gross * OTHER_TAX
+
+            record = TaxRecord(
+                emp_id=emp.EmpID,
+                name=emp.Name,
+                year=year,
+                federal=federal,
+                state=state,
+                other=other
+            )
+            report.append(record)
+
+    return report
