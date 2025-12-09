@@ -7,6 +7,10 @@ from app.core.database import get_db
 from app.core.templates import templates
 from app.models.employee import Employee
 from app.schemas.employee import EmployeeCreate, EmployeeRead
+from app.models.department import Department
+from app.models.division import Division
+from app.models.office import Office
+from app.models.project import Project
 
 router = APIRouter()
 
@@ -34,8 +38,20 @@ def create_employee(employee: EmployeeCreate, db: Session = Depends(get_db)):
 @router.get("/employees_page", response_class=HTMLResponse)
 def employees_page(request: Request, db: Session = Depends(get_db)):
     employees = db.query(Employee).all()
+    departments = db.query(Department).all()
+    divisions = db.query(Division).all()
+    offices = db.query(Office).all()
+    projects = db.query(Project).all()
     return templates.TemplateResponse(
-        "employees.html", {"request": request, "employees": employees}
+        "employees.html",
+        {
+            "request": request,
+            "employees": employees,
+            "departments": departments,
+            "divisions": divisions,
+            "offices": offices,
+            "projects": projects,
+        },
     )
 
 # HTML form submission handler

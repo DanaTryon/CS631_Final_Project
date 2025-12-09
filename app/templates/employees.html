@@ -56,17 +56,37 @@
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" required>
 
-        <label for="DeptID">Department ID:</label>
-        <input type="text" id="DeptID" name="DeptID">
+        <label for="dept_id">Department:</label>
+        <select id="dept_id" name="dept_id">
+            <option value="">-- None --</option>
+            {% for dept in departments %}
+                <option value="{{ dept.DeptID }}">{{ dept.Name }}</option>
+            {% endfor %}
+        </select>
 
-        <label for="DivisionID">Division ID:</label>
-        <input type="text" id="DivisionID" name="DivisionID">
+        <label for="division_id">Division:</label>
+        <select id="division_id" name="division_id">
+            <option value="">-- None --</option>
+            {% for div in divisions %}
+                <option value="{{ div.DivisionID }}">{{ div.Name }}</option>
+            {% endfor %}
+        </select>
 
-        <label for="OfficeID">Office ID:</label>
-        <input type="text" id="OfficeID" name="OfficeID">
+        <label for="office_id">Office:</label>
+        <select id="office_id" name="office_id">
+            <option value="">-- None --</option>
+            {% for office in offices %}
+                <option value="{{ office.OfficeID }}">{{ office.OfficeID }}</option>
+            {% endfor %}
+        </select>
 
-        <label for="CurrentProjectID">Current Project ID:</label>
-        <input type="text" id="CurrentProjectID" name="CurrentProjectID">
+        <label for="current_project_id">Current Project:</label>
+        <select id="current_project_id" name="current_project_id">
+            <option value="">-- None --</option>
+            {% for proj in projects %}
+                <option value="{{ proj.ProjectID }}">{{ proj.Name }}</option>
+            {% endfor %}
+        </select>
 
         <button type="submit">Add Employee</button>
     </form>

@@ -2,7 +2,7 @@
 import pytest
 from sqlalchemy import inspect
 from sqlalchemy.orm import Session
-from app.database import SessionLocal, engine
+from app.core.database import SessionLocal, engine
 from app.init_db import init_db
 from app.models.employee import Employee
 
