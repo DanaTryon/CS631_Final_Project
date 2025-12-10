@@ -16,11 +16,10 @@ class JobHistoryCreate(JobHistoryBase):
     pass
 
 class JobHistory(JobHistoryBase):
-    id: int = Field(alias="JobHistoryID")
+    job_history_id: int = Field(alias="JobHistoryID")
     emp_id: int = Field(alias="EmpID")
 
-    model_config = ConfigDict(from_attributes=True)
-
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 # -------------------------
 # Employee Schemas
@@ -30,19 +29,29 @@ class EmployeeBase(BaseModel):
     name: str = Field(alias="Name")
     title: str = Field(alias="Title")
 
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
 class EmployeeCreate(EmployeeBase):
-    department: Optional[str] = Field(alias="DeptID", default=None)
+    dept_id: int = Field(alias="DeptID")
+    division_id: Optional[int] = Field(alias="DivisionID", default=None)
+    office_id: Optional[int] = Field(alias="OfficeID", default=None)
+    current_project_id: Optional[int] = Field(alias="CurrentProjectID", default=None)
+
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 class EmployeeRead(BaseModel):
     emp_id: int = Field(alias="EmpID")
     name: str = Field(alias="Name")
     title: str = Field(alias="Title")
-    department: Optional[str] = Field(alias="DeptID", default=None)
+    dept_id: Optional[int] = Field(alias="DeptID")
+    division_id: Optional[int] = Field(alias="DivisionID")
+    office_id: Optional[int] = Field(alias="OfficeID")
+    current_project_id: Optional[int] = Field(alias="CurrentProjectID") 
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 class Employee(EmployeeBase):
     emp_id: int = Field(alias="EmpID")
     job_history: List[JobHistory] = []
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)

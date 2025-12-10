@@ -21,9 +21,17 @@ def test_init_db_creates_tables(db):
     tables = inspector.get_table_names()
 
     # Assert that expected tables exist
-    assert "employees" in tables
-    assert "job_history" in tables
-    assert "projects" in tables
-    assert "project_history" in tables
-    assert "milestones" in tables
+    assert "Building" in tables
+    assert "Department" in tables
+    assert "Division" in tables
+    assert "Employee" in tables
+    assert "JobHistory" in tables
+    assert "Milestone" in tables
+    assert "Office" in tables
+    assert "Phone" in tables
+    assert "Project" in tables
+    assert "ProjectHistory" in tables
+    assert "Room" in tables
+    assert "tax_reports" in tables
+    
 
