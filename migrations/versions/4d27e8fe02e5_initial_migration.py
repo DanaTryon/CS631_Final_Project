@@ -58,11 +58,6 @@ def upgrade() -> None:
     op.create_index(op.f('ix_Milestone_MilestoneID'), 'Milestone', ['MilestoneID'], unique=False)
 
     # Other alterations and indexes
-    op.alter_column('Building', 'YearBuilt',
-               existing_type=mysql.YEAR(),
-               type_=sa.Integer(),
-               existing_nullable=True)
-    op.create_index(op.f('ix_Building_BuildingCode'), 'Building', ['BuildingCode'], unique=False)
     op.create_index(op.f('ix_Department_DeptID'), 'Department', ['DeptID'], unique=False)
     op.create_index(op.f('ix_Division_DivisionID'), 'Division', ['DivisionID'], unique=False)
     op.create_foreign_key(None, 'Employee', 'Department', ['DeptID'], ['DeptID'])
@@ -95,11 +90,6 @@ def downgrade() -> None:
     op.drop_constraint(None, 'Employee', type_='foreignkey')
     op.drop_index(op.f('ix_Division_DivisionID'), table_name='Division')
     op.drop_index(op.f('ix_Department_DeptID'), table_name='Department')
-    op.drop_index(op.f('ix_Building_BuildingCode'), table_name='Building')
-    op.alter_column('Building', 'YearBuilt',
-               existing_type=sa.Integer(),
-               type_=mysql.YEAR(),
-               existing_nullable=True)
 
     op.drop_index(op.f('ix_Milestone_MilestoneID'), table_name='Milestone')
     op.drop_table('Milestone')
