@@ -80,6 +80,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install Bandit
+      run: pip install bandit
+
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@0.20.0
       with:
