@@ -7,11 +7,17 @@ It demonstrates a vertical slice implementation of an HR payroll system, with ba
 
 ## 🚀 Features
 - **FastAPI backend** with SQLAlchemy ORM
-- **SQLite in-memory testing** (production-ready with MySQL)
+- **MySQL database** for dev/prod and isolated **MySQL test database** for testing
+- **Alembic migrations** for schema management
 - **Jinja2 templates** for frontend pages (`index`, `hr`, `projects`, `payroll`)
 - **Static assets** served via FastAPI (`/static/styles.css`)
 - **Automated testing** with `pytest` and coverage reports
-- **CI/CD ready** with GitHub Actions and Trivy security scanning
+- **Seed scripts** for baseline test data (`scripts/seed_test_data.py`)
+- **CI/CD ready** with GitHub Actions, including:
+  - MySQL service container for tests
+  - Alembic migrations in CI
+  - Test data seeding
+  - Security scanning with **Trivy** and **Bandit**
 
 ---
 
@@ -78,19 +84,29 @@ Test categories:
 - **Integration tests** → `tests/integration/`
 - **End-to-End tests** → `tests/e2e/`
 
-All tests use **SQLite in-memory** to avoid interfering with the production MySQL database.
+### Environment Separation
+- **Dev/Prod** → `.env` (uses `cs631_db`)
+- **Testing** → `.env.test` (uses `cs631_test`)
+
+Pytest automatically loads `.env.test` and runs against the isolated test DB.
 
 ---
 
-## 🔒 Security Scanning (Trivy)
+## 🔒 Security Scanning
 
+### Trivy (dependency and container scan)
 If you have Trivy installed locally:
 
 ```bash
 trivy fs .
 ```
 
-This scans the project for vulnerabilities in dependencies and configuration.
+### Bandit (Python code security linter)
+Run Bandit locally:
+
+```bash
+bandit -r app -ll
+```
 
 ---
 
@@ -99,28 +115,40 @@ This scans the project for vulnerabilities in dependencies and configuration.
 ```
 app/
   ├── main.py              # FastAPI entrypoint
-  ├── database.py          # DB session setup
+  ├── core/                # Config and database setup
   ├── models/              # SQLAlchemy models
   ├── services/            # Business logic (e.g., payroll)
   ├── schemas/             # Pydantic schemas
   └── templates/           # Jinja2 HTML templates
+scripts/
+  └── seed_test_data.py    # Baseline test data seeding
 tests/
   ├── unit/                # Unit tests
   ├── integration/         # Integration tests
   └── e2e/                 # End-to-end tests
+migrations/                # Alembic migration files
 ```
 
 ---
 
 ## 📖 Notes
-- Production DB: MySQL  
-- Testing DB: SQLite (in-memory)  
-- CI/CD: GitHub Actions workflows for automated testing and Trivy security scanning
+- **Dev/Prod DB**: MySQL (`cs631_db`)
+- **Test DB**: MySQL (`cs631_test`) isolated via `.env.test`
+- **CI/CD**: GitHub Actions workflows run migrations, seed test data, execute pytest, and perform security scans
 
 ---
 
 ## 👨‍💻 Author
-Developed by **Dana Tryon** , Computer Science Masters Graduate Student for NJIT CS631 (Data Management System Design).
+Developed by **Dana Tryon**, Computer Science Masters Graduate Student for NJIT CS631 (Data Management System Design).
+```
 
+---
+
+This version highlights:
+- Dual environment strategy (`.env` vs `.env.test`)
+- MySQL test DB in CI/CD
+- Alembic migrations
+- Seed script
+- Security scanning with Trivy + Bandit
 
 
