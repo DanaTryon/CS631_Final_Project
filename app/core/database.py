@@ -13,9 +13,9 @@ load_dotenv()
 DATABASE_URL = settings.database_url
 
 # Safety guard: prevent accidental use of test DB in non-pytest runs
-if settings.TESTING and "pytest" not in sys.argv[0]:
+if settings.TESTING and not (os.getenv("CI") or "pytest" in sys.argv[0]):
     raise RuntimeError(
-        "Application attempted to start with TESTING=true outside pytest. "
+        "Application attempted to start with TESTING=true outside pytest/CI. "
         "Refusing to connect to the test database."
     )
 
