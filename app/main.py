@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse
 # Centralized imports
 from app.core.database import Base
 from app.core.templates import templates
-from app.routes import employees, payroll, tax
+from app.routes import employees, payroll, tax, projects
 import app.models  # Ensure models are registered
 
 # Print registered tables for verification
@@ -18,6 +18,8 @@ app = FastAPI()
 app.include_router(employees.router)
 app.include_router(payroll.router)
 app.include_router(tax.router)
+app.include_router(projects.router)
+
 
 # Serve static files
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

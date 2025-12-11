@@ -29,7 +29,6 @@
                 <th>Department</th>
                 <th>Division</th>
                 <th>Office</th>
-                <th>Current Project</th>
             </tr>
         </thead>
         <tbody>
@@ -41,7 +40,6 @@
                 <td>{{ emp.department.Name if emp.department else "" }}</td>
                 <td>{{ emp.division.Name if emp.division else "" }}</td>
                 <td>{{ emp.office.OfficeID if emp.office else "" }}</td>
-                <td>{{ emp.current_project.Name if emp.current_project else "" }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -77,14 +75,6 @@
             <option value="">-- None --</option>
             {% for office in offices %}
                 <option value="{{ office.OfficeID }}">{{ office.OfficeID }}</option>
-            {% endfor %}
-        </select>
-
-        <label for="current_project_id">Current Project:</label>
-        <select id="current_project_id" name="current_project_id">
-            <option value="">-- None --</option>
-            {% for proj in projects %}
-                <option value="{{ proj.ProjectID }}">{{ proj.Name }}</option>
             {% endfor %}
         </select>
 

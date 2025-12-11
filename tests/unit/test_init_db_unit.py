@@ -1,4 +1,4 @@
-# tests/unit/test_init_db.py
+# tests/unit/test_init_db_unit.py
 from app.core.database import Base, engine
 import app.init_db
 

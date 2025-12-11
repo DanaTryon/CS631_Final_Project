@@ -13,4 +13,4 @@ class ProjectHistory(Base):
 
     # Relationships back to Employee and Project
     employee = relationship("Employee", back_populates="project_history")
-    project = relationship("Project", back_populates="project_history")
+    project = relationship("Project", back_populates="team")

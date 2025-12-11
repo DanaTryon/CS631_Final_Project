@@ -10,7 +10,6 @@ from app.schemas.employee import EmployeeCreate, EmployeeRead
 from app.models.department import Department
 from app.models.division import Division
 from app.models.office import Office
-from app.models.project import Project
 
 router = APIRouter()
 
@@ -27,7 +26,6 @@ def create_employee(employee: EmployeeCreate, db: Session = Depends(get_db)):
         DeptID=employee.dept_id,
         DivisionID=employee.division_id,
         OfficeID=employee.office_id,
-        CurrentProjectID=employee.current_project_id
     )
     db.add(new_emp)
     db.commit()
@@ -41,7 +39,6 @@ def employees_page(request: Request, db: Session = Depends(get_db)):
     departments = db.query(Department).all()
     divisions = db.query(Division).all()
     offices = db.query(Office).all()
-    projects = db.query(Project).all()
     return templates.TemplateResponse(
         "employees.html",
         {
@@ -50,7 +47,6 @@ def employees_page(request: Request, db: Session = Depends(get_db)):
             "departments": departments,
             "divisions": divisions,
             "offices": offices,
-            "projects": projects,
         },
     )
 
@@ -62,7 +58,6 @@ def add_employee_form(
     dept_id: int = Form(None),
     division_id: int = Form(None),
     office_id: int = Form(None),
-    current_project_id: int = Form(None),
     db: Session = Depends(get_db)
 ):
     new_emp = Employee(
@@ -71,7 +66,6 @@ def add_employee_form(
         DeptID=dept_id,
         DivisionID=division_id,
         OfficeID=office_id,
-        CurrentProjectID=current_project_id
     )
     db.add(new_emp)
     db.commit()

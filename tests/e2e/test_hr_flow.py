@@ -10,8 +10,7 @@ def test_full_hr_flow(client, db_session):
         "title": "QA Engineer",
         "dept_id": 1,
         "division_id": 1,
-        "office_id": 1,
-        "current_project_id": 1
+        "office_id": 1
     }
     resp = client.post("/employees", json=payload)
     assert resp.status_code == 200

@@ -14,8 +14,7 @@ def test_create_employee_json(client):
         "title": "Engineer",
         "dept_id": 1,
         "division_id": 1,
-        "office_id": 1,
-        "current_project_id": 1
+        "office_id": 1
     }
     response = client.post("/employees", json=payload)
     assert response.status_code == 200
@@ -25,7 +24,6 @@ def test_create_employee_json(client):
     assert data["DeptID"] == 1
     assert data["DivisionID"] == 1
     assert data["OfficeID"] == 1
-    assert data["CurrentProjectID"] == 1
 
 
 def test_employees_page_template(client):

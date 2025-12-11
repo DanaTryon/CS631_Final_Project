@@ -20,6 +20,142 @@
       <li>View project statistics and person-hours</li>
     </ul>
 
+    <hr>
+
+    <!-- Create Project Form -->
+    <h2>Create New Project</h2>
+    <form method="post" action="/projects_form">
+      <label>Name:</label>
+      <input type="text" name="name" required><br>
+
+      <label>Budget:</label>
+      <input type="number" step="0.01" name="budget"><br>
+
+      <label>Start Date:</label>
+      <input type="date" name="start_date"><br>
+
+      <label>End Date:</label>
+      <input type="date" name="end_date"><br>
+
+      <label>Manager ID:</label>
+      <input type="number" name="manager_id"><br>
+
+      <button type="submit">Create Project</button>
+    </form>
+
+    <hr>
+
+    <!-- Assign Employee to Project -->
+    <h2>Assign Employee to Project</h2>
+    <form method="post" action="/assign_project">
+      <label>Employee ID:</label>
+      <input type="number" name="emp_id" required><br>
+
+      <label>Project ID:</label>
+      <input type="number" name="project_id" required><br>
+
+      <label>Role:</label>
+      <input type="text" name="role" required><br>
+
+      <label>Time Spent (hours):</label>
+      <input type="number" name="time_spent" value="0"><br>
+
+      <button type="submit">Assign</button>
+    </form>
+
+    <hr>
+
+    <!-- Add Milestone Form -->
+    <h2>Add Milestone</h2>
+    <form method="post" action="/add_milestone">
+      <label>Description:</label>
+      <input type="text" name="description" required><br>
+
+      <label>Status:</label>
+      <select name="status" required>
+        <option value="pending">Pending</option>
+        <option value="in_progress">In Progress</option>
+        <option value="completed">Completed</option>
+      </select><br>
+
+      <label>Due Date:</label>
+      <input type="date" name="due_date" required><br>
+
+      <label>Project ID:</label>
+      <input type="number" name="project_id" required><br>
+
+      <label>Responsible Employee ID:</label>
+      <input type="number" name="responsible_emp_id" required><br>
+
+      <button type="submit">Add Milestone</button>
+    </form>
+
+    <hr>
+
+    <!-- Existing Projects -->
+    <h2>Existing Projects</h2>
+    <ul>
+      {% for item in projects %}
+        <li>
+          {{ item.project.Name }}
+          {% if item.project.ManagerID %}
+            (Manager ID: {{ item.project.ManagerID }})
+          {% endif %}
+          {% if item.project.Budget %}
+            – Budget: ${{ item.project.Budget }}
+          {% endif %}
+
+          <!-- Show team members -->
+          {% if item.team %}
+            <h4>Team Members:</h4>
+            <ul>
+              {% for member in item.team %}
+                <li>Employee {{ member.EmpID }} – Role: {{ member.Role }} ({{ member.TimeSpent }} hrs)</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          <!-- Show milestones -->
+          {% if item.milestones %}
+            <h4>Milestones:</h4>
+            <ul>
+              {% for milestone in item.milestones %}
+                <li>
+                  {{ milestone.Description }} – {{ milestone.Status }}
+                  (Due: {{ milestone.DueDate }}, Responsible: {{ milestone.ResponsibleEmpID }})
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      {% else %}
+        <li>No projects yet. Create one above!</li>
+      {% endfor %}
+    </ul>
+
+    <hr>
+
+    <!-- Project Statistics -->
+    <h2>Project Statistics</h2>
+    <table>
+      <tr>
+        <th>Project</th>
+        <th>Total Hours</th>
+        <th>Milestones</th>
+        <th>Completed</th>
+      </tr>
+      {% for stat in hours_data %}
+        <tr>
+          <td>{{ stat[1] }}</td>
+          <td>{{ stat[2] or 0 }}</td>
+          {% for m in milestone_data if m[0] == stat[0] %}
+            <td>{{ m[2] }}</td>
+            <td>{{ m[3] }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </table>
+
     <a href="{{ url_for('read_index') }}">← Back to Home</a>
   </main>
 </body>

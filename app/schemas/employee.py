@@ -35,7 +35,6 @@ class EmployeeCreate(EmployeeBase):
     dept_id: int = Field(alias="DeptID")
     division_id: Optional[int] = Field(alias="DivisionID", default=None)
     office_id: Optional[int] = Field(alias="OfficeID", default=None)
-    current_project_id: Optional[int] = Field(alias="CurrentProjectID", default=None)
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
@@ -46,7 +45,6 @@ class EmployeeRead(BaseModel):
     dept_id: Optional[int] = Field(alias="DeptID")
     division_id: Optional[int] = Field(alias="DivisionID")
     office_id: Optional[int] = Field(alias="OfficeID")
-    current_project_id: Optional[int] = Field(alias="CurrentProjectID") 
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 

@@ -7,12 +7,13 @@ class Milestone(Base):
     __tablename__ = "Milestone"
 
     MilestoneID = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    Name = Column(String(150), nullable=False)
-    Description = Column(Text, nullable=True)
+    Description = Column(Text, nullable=False)   # milestone description
+    Status = Column(String(50), nullable=False, default="pending")  # track progress state
     DueDate = Column(Date, nullable=True)
     ProjectID = Column(Integer, ForeignKey("Project.ProjectID"))
     ResponsibleEmpID = Column(Integer, ForeignKey("Employee.EmpID"))
 
     # Relationships
-    project = relationship("Project", back_populates="milestones", foreign_keys=[ProjectID])
-    responsible_emp = relationship("Employee", back_populates="milestones", foreign_keys=[ResponsibleEmpID])
+    project = relationship("Project", back_populates="milestones")
+    # Only keep back_populates here if Employee has a reciprocal milestones relationship
+    responsible_emp = relationship("Employee", foreign_keys=[ResponsibleEmpID])

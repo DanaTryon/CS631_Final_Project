@@ -6,8 +6,7 @@ def test_create_employee_endpoint(client):
         "title": "Manager",
         "dept_id": 1,
         "division_id": 1,
-        "office_id": 1,
-        "current_project_id": 1
+        "office_id": 1
     })
     assert response.status_code == 200
     data = response.json()
@@ -22,8 +21,7 @@ def test_list_employees_endpoint(client):
         "title": "Developer",
         "dept_id": 1,
         "division_id": 1,
-        "office_id": 1,
-        "current_project_id": 1
+        "office_id": 1
     })
 
     # Then, list employees

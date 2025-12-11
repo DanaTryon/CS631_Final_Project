@@ -16,6 +16,17 @@ class Project(Base):
 
     # Relationships
     manager = relationship("Employee", foreign_keys=[ManagerID])
-    project_history = relationship("ProjectHistory", back_populates="project")
-    employees = relationship("Employee", back_populates="current_project", foreign_keys="Employee.CurrentProjectID")
-    milestones = relationship("Milestone", back_populates="project", foreign_keys="Milestone.ProjectID")
+
+    # Team members (ProjectHistory)
+    team = relationship(
+        "ProjectHistory",
+        back_populates="project",
+        cascade="all, delete-orphan"
+    )
+
+    # Milestones
+    milestones = relationship(
+        "Milestone",
+        back_populates="project",
+        cascade="all, delete-orphan"
+    )

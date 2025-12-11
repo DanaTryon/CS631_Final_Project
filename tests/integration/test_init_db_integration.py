@@ -1,4 +1,4 @@
-# tests/integration/test_init_db.py
+# tests/integration/test_init_db_integration.py
 import pytest
 from sqlalchemy import inspect
 from sqlalchemy.orm import Session

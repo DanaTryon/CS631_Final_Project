@@ -4,6 +4,8 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 import os
 from dotenv import load_dotenv
+from app.core.database import Base
+from app.models import building, room, office, employee, division, department, project, milestones
 
 # Load environment variables from .env file
 load_dotenv()
