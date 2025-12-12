@@ -1,8 +1,8 @@
 # app/routes/projects.py
+
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import func, case
 from datetime import datetime
 
 from app.core.database import get_db
@@ -14,7 +14,9 @@ from app.models.milestones import Milestone
 
 router = APIRouter()
 
-# JSON API endpoint
+# -------------------------------
+# JSON API endpoint for project creation
+# -------------------------------
 @router.post("/projects", response_model=ProjectSchema)
 def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
     new_project = Project(
@@ -29,7 +31,10 @@ def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
     db.refresh(new_project)
     return new_project
 
+
+# -------------------------------
 # HTML form submission handler
+# -------------------------------
 @router.post("/projects_form")
 def add_project_form(
     name: str = Form(...),
@@ -51,7 +56,10 @@ def add_project_form(
     db.refresh(new_project)
     return RedirectResponse(url="/projects", status_code=303)
 
-# Projects page (reuse existing landing page)
+
+# -------------------------------
+# Projects page with statistics
+# -------------------------------
 @router.get("/projects", response_class=HTMLResponse)
 def projects_page(request: Request, db: Session = Depends(get_db)):
     projects = db.query(Project).all()
@@ -60,10 +68,21 @@ def projects_page(request: Request, db: Session = Depends(get_db)):
     for proj in projects:
         team = db.query(ProjectHistory).filter_by(ProjectID=proj.ProjectID).all()
         milestones = db.query(Milestone).filter_by(ProjectID=proj.ProjectID).all()
+
+        # Calculate statistics
+        total_hours = sum([member.TimeSpent or 0 for member in team])
+        total_milestones = len(milestones)
+        completed_milestones = sum(1 for m in milestones if m.Status == "completed")
+
         project_data.append({
             "project": proj,
             "team": team,
             "milestones": milestones,
+            "stats": {
+                "hours": total_hours,
+                "milestones": total_milestones,
+                "completed": completed_milestones,
+            }
         })
 
     return templates.TemplateResponse(
@@ -71,7 +90,10 @@ def projects_page(request: Request, db: Session = Depends(get_db)):
         {"request": request, "projects": project_data},
     )
 
+
+# -------------------------------
 # Assign employee to project
+# -------------------------------
 @router.post("/assign_project")
 def assign_project(
     emp_id: int = Form(...),
@@ -91,7 +113,10 @@ def assign_project(
     db.refresh(assignment)
     return RedirectResponse(url="/projects", status_code=303)
 
+
+# -------------------------------
 # Add milestone to a project
+# -------------------------------
 @router.post("/add_milestone")
 def add_milestone(
     description: str = Form(...),
@@ -115,37 +140,28 @@ def add_milestone(
     return RedirectResponse(url="/projects", status_code=303)
 
 
-# Project statistics page
-@router.get("/project_stats", response_class=HTMLResponse)
-def project_stats(request: Request, db: Session = Depends(get_db)):
-    # Total hours per project
-    hours_data = (
-        db.query(Project.ProjectID, Project.Name, func.sum(ProjectHistory.TimeSpent))
-        .join(ProjectHistory, Project.ProjectID == ProjectHistory.ProjectID)
-        .group_by(Project.ProjectID, Project.Name)
-        .all()
-    )
+# -------------------------------
+# Optional JSON endpoint for stats
+# -------------------------------
+@router.get("/project_stats")
+def project_stats(db: Session = Depends(get_db)):
+    projects = db.query(Project).all()
+    stats = []
 
-    # Milestone completion per project
-    milestone_data = (
-        db.query(
-            Project.ProjectID,
-            Project.Name,
-            func.count(Milestone.MilestoneID),
-            func.sum(case((Milestone.Status == "completed", 1), else_=0))
-        )
-        .join(Milestone, Project.ProjectID == Milestone.ProjectID)
-        .group_by(Project.ProjectID, Project.Name)
-        .all()
-    )
+    for proj in projects:
+        team = db.query(ProjectHistory).filter_by(ProjectID=proj.ProjectID).all()
+        milestones = db.query(Milestone).filter_by(ProjectID=proj.ProjectID).all()
 
+        total_hours = sum([member.TimeSpent or 0 for member in team])
+        total_milestones = len(milestones)
+        completed_milestones = sum(1 for m in milestones if m.Status == "completed")
 
-    return templates.TemplateResponse(
-        "projects.html",
-        {
-            "request": request,
-            "projects": db.query(Project).all(),
-            "hours_data": hours_data,
-            "milestone_data": milestone_data,
-        },
-    )
+        stats.append({
+            "project_id": proj.ProjectID,
+            "name": proj.Name,
+            "hours": total_hours,
+            "milestones": total_milestones,
+            "completed": completed_milestones,
+        })
+
+    return stats

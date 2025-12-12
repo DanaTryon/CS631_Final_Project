@@ -95,6 +95,7 @@
     <!-- Existing Projects -->
     <h2>Existing Projects</h2>
     <ul>
+      <hr>
       {% for item in projects %}
         <li>
           {{ item.project.Name }}
@@ -127,6 +128,7 @@
               {% endfor %}
             </ul>
           {% endif %}
+          <hr>
         </li>
       {% else %}
         <li>No projects yet. Create one above!</li>
@@ -144,14 +146,12 @@
         <th>Milestones</th>
         <th>Completed</th>
       </tr>
-      {% for stat in hours_data %}
+      {% for item in projects %}
         <tr>
-          <td>{{ stat[1] }}</td>
-          <td>{{ stat[2] or 0 }}</td>
-          {% for m in milestone_data if m[0] == stat[0] %}
-            <td>{{ m[2] }}</td>
-            <td>{{ m[3] }}</td>
-          {% endfor %}
+          <td>{{ item.project.Name }}</td>
+          <td>{{ item.stats.hours }}</td>
+          <td>{{ item.stats.milestones }}</td>
+          <td>{{ item.stats.completed }}</td>
         </tr>
       {% endfor %}
     </table>

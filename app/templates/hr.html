@@ -17,7 +17,7 @@
       <li>View and update employee profiles</li>
       <li>Track salary and tax history</li>
       <li>Calculate monthly payroll with automatic tax deductions</li>
-      <li>Manage hourly and salaried employees</li>
+      <li>Maintain salary history</li>
     </ul>
 
   <div class="cards-container">
@@ -37,6 +37,12 @@
       <h2>Tax Reporting</h2>
       <p>View calculated federal, state, and other taxes for employees.</p>
       <a href="{{ url_for('tax_page') }}">View Tax Report</a>
+    </div>
+
+    <div class="card">
+      <h2>Salary History</h2>
+      <p>Update employee titles and salaries, and view salary history records.</p>
+      <a href="{{ url_for('job_history_page') }}">Maintain Salary History</a>
     </div>
 
   </div>
