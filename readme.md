@@ -45,28 +45,7 @@ Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
-
 ---
-
-## ▶️ Running Locally
-
-Start the FastAPI app with Uvicorn:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-Open your browser at [http://127.0.0.1:8000](http://127.0.0.1:8000).
-
-Available routes:
-- `/` → Landing page
-- `/hr` → HR page
-- `/projects` → Projects page
-- `/payroll` → Payroll report page
-- `/payroll/run` → JSON API endpoint for payroll
-- `/job_hist` → Job History page with employee filter
-- `/update_salary` → Form endpoint to insert new salary records
-
 ### ⚙️ Environment Variables (Critical Setup)
 
 Before running locally, you **must** create your own `.env` and `.env.test` files in the project root. These files configure database connections and are required for the app and tests to run correctly.
@@ -96,6 +75,81 @@ TEST_DB_NAME=cs631_test
 ```
 
 ⚠️ Without these files, Alembic migrations, FastAPI routes, and pytest will fail because the app cannot connect to the correct database.
+
+---
+
+### ⚙️ Database Setup (Creating Tables)
+
+After configuring your `.env` and `.env.test` files with the correct MySQL credentials, you’ll need to initialize the database schema. This project uses **Alembic** migrations to manage tables.
+
+1. **Ensure the database exists**  
+   Create the dev/prod database (`cs631_db`) and test database (`cs631_test`) manually in MySQL:
+   ```sql
+   CREATE DATABASE cs631_db;
+   CREATE DATABASE cs631_test;
+   ```
+
+2. **Run Alembic migrations**  
+   From the project root, apply the migrations to create all tables:
+   ```bash
+   alembic upgrade head
+   ```
+
+   This will:
+   - Read your `.env` or `.env.test` connection string.
+   - Apply all migration scripts in `migrations/versions/`.
+   - Create tables such as `Employee`, `JobHistory`, `Project`, `Milestone`, etc.
+
+3. **Verify tables**  
+   In MySQL Workbench or CLI:
+   ```sql
+   USE cs631_db;
+   SHOW TABLES;
+   ```
+   You should see all the schema objects defined in your models.
+
+4. **(Optional) Seed test data**  
+   Run the provided script to insert baseline records:
+   ```bash
+   python scripts/seed_test_data.py
+   ```
+   Or if you prefer to manually load some seed data on MySQL workbench, you can find this under
+```
+CS631_final_project
+├── sample_data
+    ├── sample_data_inserts_ddl.txt
+    └── schema_creation_ddl.txt
+```
+
+
+---
+
+### 📌 Note
+- Always run `alembic upgrade head` after cloning or pulling new migrations.  
+- If you need to reset, you can drop the database and recreate it, then rerun migrations.  
+- The test suite (`pytest`) automatically uses `.env.test` and will run against `cs631_test`.
+
+
+---
+
+## ▶️ Running Locally
+
+Start the FastAPI app with Uvicorn:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Open your browser at [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+Available routes:
+- `/` → Landing page
+- `/hr` → HR page
+- `/projects` → Projects page
+- `/payroll` → Payroll report page
+- `/payroll/run` → JSON API endpoint for payroll
+- `/job_hist` → Job History page with employee filter
+- `/update_salary` → Form endpoint to insert new salary records
 
 ---
 
